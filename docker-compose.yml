@@ -7,5 +7,3 @@ services:
       - ./templates:/etc/nginx/templates:ro
     ports:
       - "8001:8001"
-      - "8002:8002"
-      - "8003:8003"
