@@ -1,0 +1,5 @@
+import /etc/caddy/snippets/proxy.caddy
+
+http://localhost:8001 {
+    import reverse_proxy ifrc-translationapi.azurewebsites.net
+}

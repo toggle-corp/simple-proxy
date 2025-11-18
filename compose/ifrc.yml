@@ -1,0 +1,6 @@
+services:
+  caddy:
+    environment:
+      PROJECT_NAME: ifrc
+    ports:
+      - 8001:8001

@@ -1,20 +1,44 @@
 # Simple Proxy
 
-Simple proxy server based on nginx
+A simple proxy server using Caddy.
 
 ## Usage
 
+We will use `idmc` as the example project name.
+Our project will needs these files:
+
 ```bash
-docker-compose up
+├── config
+│   └── caddy
+│       └── projects
+│           └── idmc.caddy
+└── compose
+    └── idmc.yml
 ```
 
-## Description
+**config/caddy/projects/idmc.caddy**
 
-We are running 3 proxy servers:
-- Helix Server on port 8001
-- GIDD Server on port 8002
-- Drupal Server on port 8003
-This has been configured in ./templates/default.conf.template
+```caddy
+import /etc/caddy/snippets/proxy.caddy
 
-We are expecting the client to run on 3001
-This has been configured in ./templates/proxy.conf.template
+http://localhost:8001 {
+    import reverse_proxy helix-tools-api-staging.idmcdb.org
+}
+```
+
+**compose/idmc.yml**
+
+```yaml
+services:
+  caddy:
+    environment:
+      PROJECT_NAME: idmc
+    ports:
+      - 8001:8001
+```
+
+To start the proxy server, run:
+
+```bash
+docker compose -f docker-compose.yml -f compose/idmc.yml up
+```

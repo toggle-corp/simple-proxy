@@ -1,11 +1,19 @@
-version: '3.2'
-
 services:
-  nginx-proxy:
-    image: nginx:latest
+  caddy:
+    image: caddy:2.10.2
+    restart: unless-stopped
     volumes:
-      - ./templates:/etc/nginx/templates:ro
-    ports:
-      - "8001:8001"
-      - "8002:8002"
-      - "8003:8003"
+      # Caddy config
+      - ./config/caddy/:/etc/caddy/:ro
+      - ./data/caddy/data/:/data
+      - ./data/caddy/config/:/config
+    develop:
+      watch:
+        # NOTE: this is only for restarting the container when config changed
+        # docker doesn't allow using mounted volumes in the path
+        - action: sync+restart
+          initial_sync: true
+          path: ./config/
+          target: /tmp/
+    environment:
+      FRONTEND_ALLOW_ORIGINS: ${FRONTEND_ALLOW_ORIGINS:-http://localhost:3000}

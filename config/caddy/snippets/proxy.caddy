@@ -1,0 +1,28 @@
+(preflight) {
+    # --- Handle OPTIONS preflight ---
+    @preflight method OPTIONS
+    handle @preflight {
+        header Access-Control-Allow-Origin      "{$FRONTEND_ALLOW_ORIGINS}"
+        header Access-Control-Allow-Methods     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+        header Access-Control-Allow-Headers     "Origin, Content-Type, Accept, Authorization, X-Requested-With, X-Api-Key"
+        header Access-Control-Allow-Credentials "true"
+        header Vary                             "Origin"
+        respond 204
+    }
+}
+
+(reverse_proxy) {
+    import preflight
+
+    reverse_proxy https://{args[0]} {
+
+        header_up Host "{args[0]}"
+
+        # --- CORS (add to reverse-proxy responses) ---
+        header_down Access-Control-Allow-Origin       "{$FRONTEND_ALLOW_ORIGINS}"
+        header_down Access-Control-Allow-Headers      "Origin, Content-Type, Accept, Authorization, X-Requested-With, X-Api-Key"
+        header_down Access-Control-Allow-Methods      "GET,HEAD,OPTIONS,POST,PUT"
+        header_down Access-Control-Allow-Credentials  "true"
+        header_down Vary                              "Origin"
+    }
+}

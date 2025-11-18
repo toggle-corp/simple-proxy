@@ -1,0 +1,8 @@
+services:
+  caddy:
+    environment:
+      PROJECT_NAME: idmc
+    ports:
+      - 8001:8001
+      - 8002:8002
+      - 8003:8003
