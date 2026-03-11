@@ -1,0 +1,6 @@
+services:
+  caddy:
+    environment:
+      PROJECT_NAME: mapswipe-alpha-2
+    ports:
+      - 8082:8082
